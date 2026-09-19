@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Bookings — Safar.com{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">{% endblock %}
+
+{% block content %}
+<div class="wrap console">
+  {% include 'admin/_sidebar.html' %}
+
+  <div>
+    <div class="page-head">
+      <h1>Bookings</h1>
+      <p class="muted">Every reservation on the network. Open a PNR for the full record.</p>
+    </div>
+
+    <div class="filters">
+      <a href="{{ url_for('admin.reservations') }}" class="{{ 'active' if not status }}">All</a>
+      <a href="{{ url_for('admin.reservations', status='CONFIRMED') }}" class="{{ 'active' if status == 'CONFIRMED' }}">Confirmed</a>
+      <a href="{{ url_for('admin.reservations', status='CANCELLED') }}" class="{{ 'active' if status == 'CANCELLED' }}">Cancelled</a>
+    </div>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>{{ reservations|length }} booking{{ 's' if reservations|length != 1 }}</h2>
+        <div class="row">
+          <span class="small muted" data-search-count></span>
+          <input type="search" data-search-for="#resTable" placeholder="Search PNR, name or city" style="max-width:260px">
+        </div>
+      </div>
+
+      {% if reservations %}
+      <div class="table-scroll">
+        <table id="resTable">
+          <thead><tr><th data-sort="text">PNR</th><th data-sort="text">Passenger</th><th>Route</th><th>Bus</th><th data-sort="text">Travel date</th><th data-sort="number">Seats</th><th data-sort="number">Fare</th><th>Status</th></tr></thead>
+          <tbody>
+            {% for r in reservations %}
+            <tr>
+              <td><a href="{{ url_for('admin.reservation_detail', res_id=r.id) }}"><strong>{{ r.pnr }}</strong></a></td>
+              <td>{{ r.user.name }}<br><span class="small muted">{{ r.user.email }}</span></td>
+              <td>{{ r.route.source }} → {{ r.route.destination }}</td>
+              <td class="muted">{{ r.bus.bus_no }}</td>
+              <td>{{ r.travel_date.strftime('%d %b %Y') }}</td>
+              <td>{{ r.seats }}</td>
+              <td>₹{{ '%.0f'|format(r.total_fare) }}</td>
+              <td><span class="tag {{ 'tag-ok' if r.status == 'CONFIRMED' else 'tag-off' }}">{{ r.status|title }}</span></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty"><h3>Nothing here</h3><p class="muted">No bookings match this filter.</p></div>
+      {% endif %}
+    </section>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/admin.js') }}"></script>{% endblock %}

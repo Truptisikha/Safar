@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}My bookings — Safar.com{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">{% endblock %}
+
+{% block content %}
+<div class="wrap">
+  <div class="page-head spread">
+    <div>
+      <h1>My bookings</h1>
+      <p class="muted">Quote the PNR at the boarding point.</p>
+    </div>
+    <a class="btn btn-signal" href="{{ url_for('user.view_route') }}">Book another trip</a>
+  </div>
+
+  {% if reservations %}
+  <div class="pass-list">
+    {% for b in reservations %}
+    <article class="pass">
+      <div class="pass-body">
+        <div class="leg">
+          <span class="place">{{ b.route.source }}</span>
+          <span class="road"></span>
+          <span class="place">{{ b.route.destination }}</span>
+        </div>
+        <div class="leg-meta">
+          <span>{{ b.travel_date.strftime('%a, %d %b %Y') }}</span>
+          <span>Departs {{ b.route.departure_time }}</span>
+          <span>{{ b.bus.name }} · {{ b.bus.bus_no }}</span>
+          <span>{{ b.seats }} seat{{ 's' if b.seats > 1 }}</span>
+          <span>Booked {{ b.created_at.strftime('%d %b') }}</span>
+        </div>
+
+        <div class="row" style="margin-top:1rem">
+          {% if b.status == 'CONFIRMED' %}
+          <form method="POST" action="{{ url_for('user.cancel', res_id=b.id) }}"
+                data-confirm="Cancel {{ b.pnr }}? The seats go back on sale.">
+            <button class="btn btn-sm btn-ghost" type="submit">Cancel booking</button>
+          </form>
+          {% endif %}
+          <form method="POST" action="{{ url_for('user.delete_res', res_id=b.id) }}"
+                data-confirm="Remove {{ b.pnr }} from your history for good?">
+            <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="pass-stub">
+        <div>
+          <div class="pnr">{{ b.pnr }}</div>
+          <div class="fare">₹{{ '%.0f'|format(b.total_fare) }}</div>
+        </div>
+        <span class="tag {{ 'tag-ok' if b.status == 'CONFIRMED' else 'tag-off' }}">{{ b.status|title }}</span>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="panel empty">
+    <h3>No bookings yet</h3>
+    <p class="muted">Search a route and your first ticket will show up here.</p>
+    <a class="btn btn-signal" href="{{ url_for('user.view_route') }}">Find a bus</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

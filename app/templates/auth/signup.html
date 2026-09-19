@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Create an account — Safar.com{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">{% endblock %}
+
+{% block content %}
+<div class="auth-shell">
+  <aside class="auth-aside">
+    <div class="leg">
+      <span class="place">Cuttack</span>
+      <span class="road"></span>
+      <span class="place">Puri</span>
+    </div>
+    <h2>One account, every route.</h2>
+    <p>It takes a minute. After that, booking a seat is two fields and a button.</p>
+    <ul class="auth-points">
+      <li>No charge to hold a booking</li>
+      <li>Your trip history stays in one place</li>
+      <li>Rate a journey once it's done</li>
+    </ul>
+  </aside>
+
+  <div class="auth-main">
+    <div class="auth-card">
+      <h1>Create an account</h1>
+      <p>You'll be signed in straight away.</p>
+
+      <form method="POST" data-validate="auth" novalidate>
+        <div class="field">
+          <label for="name">Full name</label>
+          <input type="text" id="name" name="name" value="{{ form.get('name', '') }}" autocomplete="name" required>
+          <div class="field-error"></div>
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" value="{{ form.get('email', '') }}" autocomplete="email" required>
+          <div class="field-error"></div>
+        </div>
+
+        <div class="field">
+          <label for="phone">Phone (optional)</label>
+          <input type="tel" id="phone" name="phone" value="{{ form.get('phone', '') }}" maxlength="10" autocomplete="tel">
+          <div class="field-error"></div>
+        </div>
+
+        <div class="field-grid" style="margin-top:.9rem">
+          <div class="field" style="margin:0">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" autocomplete="new-password" required>
+            <div class="field-error"></div>
+          </div>
+          <div class="field" style="margin:0">
+            <label for="confirm_password">Repeat password</label>
+            <input type="password" id="confirm_password" name="confirm_password" autocomplete="new-password" required>
+            <div class="field-error"></div>
+          </div>
+        </div>
+
+        <button class="btn btn-signal" type="submit">Create account</button>
+      </form>
+
+      <p class="auth-switch">Already registered? <a href="{{ url_for('auth.login') }}">Sign in</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/auth.js') }}"></script>{% endblock %}

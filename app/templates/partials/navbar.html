@@ -1,0 +1,29 @@
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="{{ url_for('main.index') }}">Safar<span>.com</span></a>
+
+    <button class="nav-toggle" aria-expanded="false" aria-label="Menu">Menu</button>
+
+    <nav class="nav">
+      {% if current_user.is_authenticated %}
+        {% if current_user.is_admin %}
+          <a href="{{ url_for('admin.dashboard') }}" class="{{ 'active' if request.endpoint == 'admin.dashboard' }}">Dashboard</a>
+          <a href="{{ url_for('admin.manage_bus') }}" class="{{ 'active' if request.endpoint == 'admin.manage_bus' }}">Buses</a>
+          <a href="{{ url_for('admin.manage_route') }}" class="{{ 'active' if request.endpoint == 'admin.manage_route' }}">Routes</a>
+          <a href="{{ url_for('admin.reservations') }}" class="{{ 'active' if request.endpoint == 'admin.reservations' }}">Bookings</a>
+          <a href="{{ url_for('admin.profile') }}">{{ current_user.name }}</a>
+        {% else %}
+          <a href="{{ url_for('user.dashboard') }}" class="{{ 'active' if request.endpoint == 'user.dashboard' }}">Dashboard</a>
+          <a href="{{ url_for('user.view_route') }}" class="{{ 'active' if request.endpoint == 'user.view_route' }}">Find a bus</a>
+          <a href="{{ url_for('user.reservations') }}" class="{{ 'active' if request.endpoint == 'user.reservations' }}">My bookings</a>
+          <a href="{{ url_for('user.feedback') }}" class="{{ 'active' if request.endpoint == 'user.feedback' }}">Feedback</a>
+          <a href="{{ url_for('user.profile') }}">{{ current_user.name }}</a>
+        {% endif %}
+        <a href="{{ url_for('auth.logout') }}">Sign out</a>
+      {% else %}
+        <a href="{{ url_for('auth.login') }}">Sign in</a>
+        <a href="{{ url_for('auth.signup') }}" class="active">Create account</a>
+      {% endif %}
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,65 @@
+/* Passenger-facing screens. */
+
+/* landing hero */
+.hero { background: var(--ink); color: #fff; padding: 4rem 0 3.5rem; }
+.hero h1 { font-size: clamp(2.2rem, 6vw, 3.4rem); max-width: 18ch; }
+.hero p { color: #9fb0c1; font-size: 1.1rem; max-width: 46ch; }
+.hero .row { margin-top: 1.75rem; }
+
+.hero-board {
+  margin-top: 2.5rem; background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.12); border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+}
+.hero-board table { font-size: .9rem; }
+.hero-board th, .hero-board td { border-bottom-color: rgba(255,255,255,.12); color: #cfd8e1; }
+.hero-board th { color: #7f93a7; }
+.hero-board tbody tr:hover { background: rgba(255,255,255,.04); }
+.hero-board .place { color: #fff; font-weight: 600; }
+
+/* stat strip */
+.stats { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.1rem 1.2rem; }
+.stat .value { font-size: 1.9rem; font-weight: 800; letter-spacing: -.03em; display: block; }
+.stat .label { font-size: .84rem; color: var(--ink-soft); }
+
+/* search bar for routes */
+.searchbar {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 1rem 1.2rem; margin-bottom: 1.5rem;
+}
+.searchbar form { display: grid; gap: .8rem; grid-template-columns: 1fr 1fr auto; align-items: end; }
+
+/* list of passes */
+.pass-list { display: grid; gap: 1rem; }
+.pass-list .pass:hover { border-color: var(--ink-soft); }
+
+.seat-line { display: flex; align-items: center; gap: .5rem; font-size: .86rem; margin-top: .6rem; }
+.seat-bar { flex: 1; max-width: 160px; height: 6px; border-radius: 999px; background: var(--canvas); overflow: hidden; }
+.seat-bar i { display: block; height: 100%; background: var(--track); }
+.seat-bar.tight i { background: var(--alert); }
+
+/* booking form inside a pass */
+.book-form { display: grid; grid-template-columns: 1fr 90px auto; gap: .6rem; align-items: end; margin-top: 1rem; }
+.book-form label { margin-bottom: .2rem; }
+
+/* bus grid */
+.bus-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.bus-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.2rem; }
+.bus-card .no { font-weight: 800; font-size: 1.1rem; letter-spacing: -.02em; }
+.bus-card dl { display: grid; grid-template-columns: auto 1fr; gap: .3rem .8rem; margin: .9rem 0 0; font-size: .88rem; }
+.bus-card dt { color: var(--ink-soft); }
+.bus-card dd { margin: 0; font-weight: 600; }
+
+/* feedback */
+.review { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.1rem 1.2rem; }
+.review + .review { margin-top: .9rem; }
+.review header { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: .4rem; }
+.stars { color: var(--signal); letter-spacing: .1em; font-size: .95rem; }
+.review p { margin: 0; }
+.review-actions { margin-top: .8rem; display: flex; gap: .5rem; }
+
+@media (max-width: 760px) {
+  .searchbar form { grid-template-columns: 1fr; }
+  .book-form { grid-template-columns: 1fr; }
+}

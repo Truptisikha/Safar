@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block title %}Buses — Safar.com{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">{% endblock %}
+
+{% block content %}
+<div class="wrap console">
+  {% include 'admin/_sidebar.html' %}
+
+  <div>
+    <div class="page-head">
+      <h1>Buses</h1>
+      <p class="muted">Deleting a bus also removes its routes and bookings.</p>
+    </div>
+
+    <section class="admin-form">
+      <h3>Add a bus</h3>
+      <form method="POST" action="{{ url_for('admin.add_bus') }}">
+        <div class="field-grid">
+          <div><label for="bus_no">Bus number</label><input type="text" id="bus_no" name="bus_no" placeholder="OD02AB1234" required></div>
+          <div><label for="name">Name</label><input type="text" id="name" name="name" placeholder="Konark Express" required></div>
+          <div>
+            <label for="bus_type">Class</label>
+            <select id="bus_type" name="bus_type">
+              <option>Seater</option><option>Sleeper</option>
+              <option>AC Seater</option><option>AC Sleeper</option>
+            </select>
+          </div>
+          <div><label for="total_seats">Seats</label><input type="number" id="total_seats" name="total_seats" value="40" min="1" max="80" required></div>
+        </div>
+        <button class="btn btn-signal" type="submit">Add bus</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Fleet</h2>
+        <input type="search" data-search-for="#busTable" placeholder="Search buses" style="max-width:220px">
+      </div>
+
+      {% if buses %}
+      <div class="table-scroll">
+        <table id="busTable">
+          <thead><tr><th data-sort="text">Number</th><th data-sort="text">Name</th><th>Class</th><th data-sort="number">Seats</th><th data-sort="number">Routes</th><th></th></tr></thead>
+          <tbody>
+            {% for b in buses %}
+            <tr>
+              <td><strong>{{ b.bus_no }}</strong></td>
+              <td>{{ b.name }}</td>
+              <td><span class="tag tag-signal">{{ b.bus_type }}</span></td>
+              <td>{{ b.total_seats }}</td>
+              <td>{{ b.routes|length }}</td>
+              <td class="right">
+                <div class="actions" style="justify-content:flex-end">
+                  <button class="btn btn-sm btn-ghost"
+                          data-edit="editBus"
+                          data-action="{{ url_for('admin.update_bus', bus_id=b.id) }}"
+                          data-bus_no="{{ b.bus_no }}" data-name="{{ b.name }}"
+                          data-bus_type="{{ b.bus_type }}" data-total_seats="{{ b.total_seats }}">Edit</button>
+                  <form method="POST" action="{{ url_for('admin.delete_bus', bus_id=b.id) }}"
+                        data-confirm="Delete {{ b.bus_no }} with its routes and bookings?">
+                    <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty"><h3>No buses yet</h3><p class="muted">Add your first bus using the form above.</p></div>
+      {% endif %}
+    </section>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="editBus">
+  <div class="modal">
+    <h3>Edit bus</h3>
+    <form method="POST">
+      <div class="field-grid">
+        <div><label>Bus number</label><input type="text" name="bus_no" required></div>
+        <div><label>Name</label><input type="text" name="name" required></div>
+        <div>
+          <label>Class</label>
+          <select name="bus_type"><option>Seater</option><option>Sleeper</option><option>AC Seater</option><option>AC Sleeper</option></select>
+        </div>
+        <div><label>Seats</label><input type="number" name="total_seats" min="1" max="80" required></div>
+      </div>
+      <div class="row" style="margin-top:1rem">
+        <button class="btn btn-signal" type="submit">Save changes</button>
+        <button class="btn btn-ghost" type="button" onclick="Safar.closeModal('editBus')">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/admin.js') }}"></script>{% endblock %}

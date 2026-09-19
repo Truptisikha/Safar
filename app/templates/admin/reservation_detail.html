@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}{{ r.pnr }} — Safar.com{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="wrap console">
+  {% include 'admin/_sidebar.html' %}
+
+  <div>
+    <div class="page-head">
+      <p class="small muted" style="margin:0"><a href="{{ url_for('admin.reservations') }}">Bookings</a> / {{ r.pnr }}</p>
+      <h1>{{ r.pnr }}</h1>
+    </div>
+
+    <article class="pass" style="margin-bottom:1.5rem">
+      <div class="pass-body">
+        <div class="leg">
+          <span class="place">{{ r.route.source }}</span>
+          <span class="road"></span>
+          <span class="place">{{ r.route.destination }}</span>
+        </div>
+        <div class="leg-meta">
+          <span>{{ r.travel_date.strftime('%A, %d %b %Y') }}</span>
+          <span>{{ r.route.departure_time }} — {{ r.route.arrival_time }}</span>
+          <span>{{ r.bus.name }} · {{ r.bus.bus_no }} · {{ r.bus.bus_type }}</span>
+        </div>
+      </div>
+      <div class="pass-stub">
+        <div>
+          <div class="pnr">{{ r.seats }} seat{{ 's' if r.seats > 1 }}</div>
+          <div class="fare">₹{{ '%.0f'|format(r.total_fare) }}</div>
+        </div>
+        <span class="tag {{ 'tag-ok' if r.status == 'CONFIRMED' else 'tag-off' }}">{{ r.status|title }}</span>
+      </div>
+    </article>
+
+    <section class="panel">
+      <h3>Passenger</h3>
+      <dl class="detail-grid">
+        <div><dt>Name</dt><dd>{{ r.user.name }}</dd></div>
+        <div><dt>Email</dt><dd>{{ r.user.email }}</dd></div>
+        <div><dt>Phone</dt><dd>{{ r.user.phone or '—' }}</dd></div>
+        <div><dt>Booked on</dt><dd>{{ r.created_at.strftime('%d %b %Y, %H:%M') }}</dd></div>
+        <div><dt>Fare per seat</dt><dd>₹{{ '%.0f'|format(r.route.fare) }}</dd></div>
+        <div><dt>Distance</dt><dd>{{ r.route.distance_km|round|int }} km</dd></div>
+      </dl>
+    </section>
+  </div>
+</div>
+{% endblock %}

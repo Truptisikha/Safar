@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Feedback — Safar.com{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="wrap console">
+  {% include 'admin/_sidebar.html' %}
+
+  <div>
+    <div class="page-head">
+      <h1>Feedback</h1>
+      <p class="muted">Read-only, apart from removing anything abusive.</p>
+    </div>
+
+    <div class="tiles">
+      <div class="tile tile-revenue"><span class="value">{{ average }}</span><span class="label">Average rating out of 5</span></div>
+      <div class="tile"><span class="value">{{ feedbacks|length }}</span><span class="label">Reviews posted</span></div>
+    </div>
+
+    {% if feedbacks %}
+      {% for f in feedbacks %}
+      <article class="review">
+        <header>
+          <div>
+            <strong>{{ f.user.name }}</strong>
+            <span class="small muted">· {{ f.user.email }} · {{ f.created_at.strftime('%d %b %Y') }}</span>
+          </div>
+          <span class="stars">{{ '★' * f.rating }}{{ '☆' * (5 - f.rating) }}</span>
+        </header>
+        <p>{{ f.message }}</p>
+        <div class="review-actions">
+          <form method="POST" action="{{ url_for('admin.delete_feedback', fb_id=f.id) }}"
+                data-confirm="Remove this review?">
+            <button class="btn btn-sm btn-danger" type="submit">Remove</button>
+          </form>
+        </div>
+      </article>
+      {% endfor %}
+    {% else %}
+      <div class="panel empty"><h3>No reviews yet</h3><p class="muted">Passenger feedback will collect here.</p></div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

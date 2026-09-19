@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Safar.com — intercity bus booking{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="wrap">
+    <h1>Book the seat, not the whole afternoon.</h1>
+    <p>Search live routes, see exactly how many seats are left on your date, and hold a booking in two clicks.</p>
+
+    <div class="row">
+      <a class="btn btn-signal" href="{{ url_for('auth.signup') }}">Create an account</a>
+      <a class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,.35)" href="{{ url_for('auth.login') }}">Sign in</a>
+    </div>
+
+    {% if routes %}
+    <div class="hero-board">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>Departs</th><th>Route</th><th>Bus</th><th class="right">Fare</th></tr>
+          </thead>
+          <tbody>
+            {% for r in routes %}
+            <tr>
+              <td>{{ r.departure_time }}</td>
+              <td><span class="place">{{ r.source }}</span> → <span class="place">{{ r.destination }}</span></td>
+              <td>{{ r.bus.name }} · {{ r.bus.bus_no }}</td>
+              <td class="right">₹{{ '%.0f'|format(r.fare) }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<div class="wrap" style="margin-top:2.5rem">
+  <div class="stats">
+    <div class="stat"><span class="value">Live</span><span class="label">Seat counts per date, not per bus</span></div>
+    <div class="stat"><span class="value">2 taps</span><span class="label">From route list to confirmed PNR</span></div>
+    <div class="stat"><span class="value">Free</span><span class="label">Cancel any trip before the travel date</span></div>
+  </div>
+
+  {% if reviews %}
+  <section style="margin-top:2.5rem">
+    <h2>What passengers said</h2>
+    {% for f in reviews %}
+      <article class="review">
+        <header>
+          <strong>{{ f.user.name }}</strong>
+          <span class="stars">{{ '★' * f.rating }}{{ '☆' * (5 - f.rating) }}</span>
+        </header>
+        <p>{{ f.message }}</p>
+      </article>
+    {% endfor %}
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

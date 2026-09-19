@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Sign in — Safar.com{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">{% endblock %}
+
+{% block content %}
+<div class="auth-shell">
+  <aside class="auth-aside">
+    <div class="leg">
+      <span class="place">Bhubaneswar</span>
+      <span class="road"></span>
+      <span class="place">Kolkata</span>
+    </div>
+    <h2>Your seat is waiting.</h2>
+    <p>Sign in to see upcoming trips, cancel a booking, or leave a note about your last journey.</p>
+    <ul class="auth-points">
+      <li>Every booking gets a PNR you can quote at the counter</li>
+      <li>Seat counts update as others book</li>
+      <li>Cancel any time before the travel date</li>
+    </ul>
+  </aside>
+
+  <div class="auth-main">
+    <div class="auth-card">
+      <h1>Sign in</h1>
+      <p>Use the email you signed up with.</p>
+
+      <form method="POST" data-validate="auth" novalidate>
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" value="{{ email }}" autocomplete="email" required>
+          <div class="field-error"></div>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" autocomplete="current-password" required>
+          <div class="field-error"></div>
+        </div>
+
+        <div class="remember">
+          <input type="checkbox" id="remember" name="remember">
+          <label for="remember">Keep me signed in</label>
+        </div>
+
+        <button class="btn btn-signal" type="submit">Sign in</button>
+      </form>
+
+      <p class="auth-switch">New here? <a href="{{ url_for('auth.signup') }}">Create an account</a></p>
+
+      <div class="auth-hint">
+        Demo logins after running <code>python seed.py</code>:<br>
+        admin@safar.com / admin123 &nbsp;·&nbsp; riya@mail.com / user123
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/auth.js') }}"></script>{% endblock %}

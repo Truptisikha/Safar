@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Our buses — Safar.com{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">{% endblock %}
+
+{% block content %}
+<div class="wrap">
+  <div class="page-head">
+    <h1>Our fleet</h1>
+    <p class="muted">Every bus on the network, with its seat count and class.</p>
+  </div>
+
+  {% if buses %}
+  <div class="bus-grid">
+    {% for bus in buses %}
+    <article class="bus-card">
+      <div class="spread">
+        <span class="no">{{ bus.bus_no }}</span>
+        <span class="tag tag-signal">{{ bus.bus_type }}</span>
+      </div>
+      <strong>{{ bus.name }}</strong>
+      <dl>
+        <dt>Seats</dt><dd>{{ bus.total_seats }}</dd>
+        <dt>Routes</dt><dd>{{ bus.routes|length }}</dd>
+      </dl>
+      {% if bus.routes %}
+      <p class="small muted" style="margin:.8rem 0 0">
+        {% for r in bus.routes[:3] %}{{ r.source }} → {{ r.destination }}{% if not loop.last %} · {% endif %}{% endfor %}
+      </p>
+      {% endif %}
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="panel empty">
+    <h3>The depot is empty</h3>
+    <p class="muted">No buses have been added yet.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

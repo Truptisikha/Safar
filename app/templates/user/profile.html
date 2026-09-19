@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Profile — Safar.com{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">{% endblock %}
+
+{% block content %}
+<div class="wrap" style="max-width:640px">
+  <div class="page-head">
+    <h1>Your profile</h1>
+    <p class="muted">Signed in as {{ current_user.email }}.</p>
+  </div>
+
+  <div class="panel">
+    <form method="POST">
+      <div class="field">
+        <label for="name">Full name</label>
+        <input type="text" id="name" name="name" value="{{ current_user.name }}" required>
+      </div>
+      <div class="field">
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" name="phone" value="{{ current_user.phone or '' }}" maxlength="10">
+      </div>
+      <div class="field">
+        <label for="password">New password</label>
+        <input type="password" id="password" name="password" placeholder="Leave blank to keep the current one">
+      </div>
+      <button class="btn btn-signal" type="submit" style="margin-top:1rem">Save changes</button>
+    </form>
+  </div>
+
+  <p class="small muted" style="margin-top:1rem">
+    Joined {{ current_user.created_at.strftime('%d %b %Y') }} ·
+    {{ current_user.reservations|length }} booking(s) on record.
+  </p>
+</div>
+{% endblock %}

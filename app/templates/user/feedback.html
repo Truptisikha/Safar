@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}Feedback — Safar.com{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">{% endblock %}
+
+{% block content %}
+<div class="wrap">
+  <div class="page-head">
+    <h1>Feedback</h1>
+    <p class="muted">Tell us how the journey went. You can edit or delete anything you post.</p>
+  </div>
+
+  <section class="panel" style="margin-bottom:1.75rem">
+    <h3>Write a review</h3>
+    <form method="POST" action="{{ url_for('user.add_feedback') }}">
+      <div class="field">
+        <label for="message">How was your trip?</label>
+        <textarea id="message" name="message" maxlength="500"
+                  placeholder="Legroom, punctuality, the driver, the stops — whatever stood out." required></textarea>
+        <div class="spread small muted" style="margin-top:.3rem">
+          <span></span><span data-charcount>0/500</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Rating</label>
+        <input type="hidden" name="rating" value="5">
+        <div class="stars" data-stars>
+          <button aria-label="1 star">★</button><button aria-label="2 stars">★</button>
+          <button aria-label="3 stars">★</button><button aria-label="4 stars">★</button>
+          <button aria-label="5 stars">★</button>
+        </div>
+      </div>
+
+      <button class="btn btn-signal" type="submit">Post review</button>
+    </form>
+  </section>
+
+  <h2>Your reviews</h2>
+  {% if feedbacks %}
+    {% for f in feedbacks %}
+    <article class="review">
+      <header>
+        <strong>{{ f.created_at.strftime('%d %b %Y') }}</strong>
+        <span class="stars">{{ '★' * f.rating }}{{ '☆' * (5 - f.rating) }}</span>
+      </header>
+      <p>{{ f.message }}</p>
+      <div class="review-actions">
+        <button class="btn btn-sm btn-ghost"
+                data-edit-feedback
+                data-action="{{ url_for('user.update_feedback', fb_id=f.id) }}"
+                data-message="{{ f.message }}"
+                data-rating="{{ f.rating }}">Edit</button>
+        <form method="POST" action="{{ url_for('user.delete_feedback', fb_id=f.id) }}"
+              data-confirm="Delete this review?">
+          <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+        </form>
+      </div>
+    </article>
+    {% endfor %}
+  {% else %}
+    <div class="panel empty">
+      <h3>Nothing posted yet</h3>
+      <p class="muted">Your reviews will appear here once you write one.</p>
+    </div>
+  {% endif %}
+</div>
+
+<!-- edit dialog -->
+<div class="modal-backdrop" id="editFeedback">
+  <div class="modal">
+    <h3>Edit your review</h3>
+    <form method="POST" id="editFeedbackForm">
+      <div class="field">
+        <label for="edit-message">Review</label>
+        <textarea id="edit-message" name="message" maxlength="500" required></textarea>
+      </div>
+      <div class="field">
+        <label>Rating</label>
+        <input type="hidden" name="rating" value="5">
+        <div class="stars" data-stars>
+          <button>★</button><button>★</button><button>★</button><button>★</button><button>★</button>
+        </div>
+      </div>
+      <div class="row" style="margin-top:1rem">
+        <button class="btn btn-signal" type="submit">Save changes</button>
+        <button class="btn btn-ghost" type="button" onclick="Safar.closeModal('editFeedback')">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/feedback.js') }}"></script>{% endblock %}

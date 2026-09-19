@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Page not found — Safar.com{% endblock %}
+
+{% block content %}
+<div class="wrap">
+  <div class="panel empty">
+    <h3>This stop isn't on the map</h3>
+    <p class="muted">The page you asked for doesn't exist, or it moved.</p>
+    <a class="btn btn-signal" href="{{ url_for('main.index') }}">Back to the start</a>
+  </div>
+</div>
+{% endblock %}

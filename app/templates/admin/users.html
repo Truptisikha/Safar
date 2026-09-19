@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Passengers — Safar.com{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">{% endblock %}
+
+{% block content %}
+<div class="wrap console">
+  {% include 'admin/_sidebar.html' %}
+
+  <div>
+    <div class="page-head">
+      <h1>Passengers</h1>
+      <p class="muted">Deleting an account also removes its bookings and reviews.</p>
+    </div>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>{{ users|length }} registered</h2>
+        <input type="search" data-search-for="#userTable" placeholder="Search by name or email" style="max-width:260px">
+      </div>
+
+      {% if users %}
+      <div class="table-scroll">
+        <table id="userTable">
+          <thead><tr><th data-sort="text">Name</th><th data-sort="text">Email</th><th>Phone</th><th data-sort="number">Bookings</th><th>Joined</th><th></th></tr></thead>
+          <tbody>
+            {% for u in users %}
+            <tr>
+              <td><strong>{{ u.name }}</strong></td>
+              <td class="muted">{{ u.email }}</td>
+              <td>{{ u.phone or '—' }}</td>
+              <td>{{ u.reservations|length }}</td>
+              <td>{{ u.created_at.strftime('%d %b %Y') }}</td>
+              <td class="right">
+                <form method="POST" action="{{ url_for('admin.delete_user', user_id=u.id) }}"
+                      data-confirm="Delete {{ u.name }}'s account and all their bookings?">
+                  <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty"><h3>No passengers yet</h3><p class="muted">Accounts appear here as people sign up.</p></div>
+      {% endif %}
+    </section>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/admin.js') }}"></script>{% endblock %}

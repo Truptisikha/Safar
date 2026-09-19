@@ -1,0 +1,53 @@
+/* Sign-in and sign-up: a single centred card on the slate canvas. */
+
+.auth-shell {
+  min-height: calc(100vh - 62px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.auth-aside {
+  background: var(--ink);
+  color: #fff;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.auth-aside h2 { font-size: 2.1rem; max-width: 14ch; }
+.auth-aside p { color: #9fb0c1; max-width: 38ch; }
+.auth-aside .leg .place { color: #fff; font-size: 1rem; }
+.auth-aside .leg .road { background: repeating-linear-gradient(90deg, var(--signal) 0 8px, transparent 8px 15px); }
+.auth-aside .leg .road::after { border-left-color: var(--signal); }
+
+.auth-points { list-style: none; padding: 0; margin: 1.5rem 0 0; }
+.auth-points li { padding: .35rem 0 .35rem 1.4rem; position: relative; color: #cfd8e1; font-size: .95rem; }
+.auth-points li::before {
+  content: ""; position: absolute; left: 0; top: .95rem;
+  width: 8px; height: 8px; border-radius: 50%; background: var(--signal);
+}
+
+.auth-main {
+  display: flex; align-items: center; justify-content: center; padding: 2.5rem 1.5rem;
+}
+.auth-card { width: min(420px, 100%); }
+.auth-card h1 { margin-bottom: .25rem; }
+.auth-card > p { color: var(--ink-soft); margin-bottom: 1.5rem; }
+.auth-card .btn { width: 100%; justify-content: center; margin-top: 1.25rem; }
+
+.auth-switch { margin-top: 1.25rem; font-size: .92rem; text-align: center; color: var(--ink-soft); }
+
+.auth-hint {
+  margin-top: 1.5rem; padding: .8rem .9rem;
+  background: var(--signal-dim); border-radius: var(--radius-sm);
+  font-size: .84rem; color: #7a5706;
+}
+
+.remember { display: flex; align-items: center; gap: .5rem; margin-top: .9rem; }
+.remember input { width: auto; }
+.remember label { margin: 0; font-weight: 500; color: var(--ink); }
+
+@media (max-width: 900px) {
+  .auth-shell { grid-template-columns: 1fr; }
+  .auth-aside { display: none; }
+}

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}Find a bus — Safar.com{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">{% endblock %}
+
+{% block content %}
+<div class="wrap">
+  <div class="page-head">
+    <h1>Find a bus</h1>
+    <p class="muted">Pick a date to see how many seats are actually left on that day.</p>
+  </div>
+
+  <div class="searchbar">
+    <form method="GET">
+      <div>
+        <label for="source">From</label>
+        <input type="text" id="source" name="source" value="{{ source }}" placeholder="Bhubaneswar">
+      </div>
+      <div>
+        <label for="destination">To</label>
+        <input type="text" id="destination" name="destination" value="{{ destination }}" placeholder="Kolkata">
+      </div>
+      <button class="btn" type="submit">Search</button>
+    </form>
+  </div>
+
+  {% if routes %}
+  <div class="pass-list">
+    {% for r in routes %}
+    <article class="pass"
+             data-route-id="{{ r.id }}"
+             data-fare="{{ r.fare }}"
+             data-total-seats="{{ r.bus.total_seats }}">
+      <div class="pass-body">
+        <div class="leg">
+          <span class="place">{{ r.source }}</span>
+          <span class="road"></span>
+          <span class="place">{{ r.destination }}</span>
+        </div>
+        <div class="leg-meta">
+          <span>{{ r.departure_time }} — {{ r.arrival_time }}</span>
+          <span>{{ r.bus.name }} · {{ r.bus.bus_no }}</span>
+          <span>{{ r.bus.bus_type }}</span>
+          {% if r.distance_km %}<span>{{ r.distance_km|round|int }} km</span>{% endif %}
+        </div>
+
+        <div class="seat-line">
+          <span class="seat-bar"><i style="width:100%"></i></span>
+          <span class="muted" data-seats-left>Pick a date to check seats</span>
+        </div>
+
+        <form class="book-form" method="POST" action="{{ url_for('user.add_reservation') }}">
+          <input type="hidden" name="route_id" value="{{ r.id }}">
+          <div>
+            <label for="date-{{ r.id }}">Travel date</label>
+            <input type="date" id="date-{{ r.id }}" name="travel_date" min="{{ today }}" value="{{ today }}" required>
+          </div>
+          <div>
+            <label for="seats-{{ r.id }}">Seats</label>
+            <input type="number" id="seats-{{ r.id }}" name="seats" value="1" min="1" max="6" required>
+          </div>
+          <button class="btn btn-signal" type="submit">Book</button>
+        </form>
+      </div>
+
+      <div class="pass-stub">
+        <div>
+          <div class="pnr">Fare per seat</div>
+          <div class="fare">₹{{ '%.0f'|format(r.fare) }}</div>
+        </div>
+        <div class="small">Total <strong data-total>₹{{ '%.0f'|format(r.fare) }}</strong></div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="panel empty">
+    <h3>No routes match that search</h3>
+    <p class="muted">Try a different city, or clear the filters to see everything.</p>
+    <a class="btn btn-ghost" href="{{ url_for('user.view_route') }}">Clear filters</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/reservation.js') }}"></script>{% endblock %}

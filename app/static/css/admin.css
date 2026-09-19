@@ -1,0 +1,45 @@
+/* Depot console: sidebar + dense working tables. */
+
+.console { display: grid; grid-template-columns: 220px 1fr; gap: 1.75rem; align-items: start; }
+
+.side { position: sticky; top: 82px; }
+.side nav { display: flex; flex-direction: column; gap: .15rem; }
+.side a {
+  padding: .55rem .75rem; border-radius: var(--radius-sm);
+  text-decoration: none; color: var(--ink-soft); font-size: .93rem; font-weight: 500;
+}
+.side a:hover { background: var(--surface); color: var(--ink); }
+.side a.active { background: var(--ink); color: #fff; }
+.side .side-title { font-size: .78rem; color: var(--ink-soft); font-weight: 700; margin: 1.25rem .75rem .35rem; }
+
+/* metric tiles — the revenue tile is the one loud element */
+.tiles { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-bottom: 1.75rem; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.1rem 1.2rem; }
+.tile .value { font-size: 1.8rem; font-weight: 800; letter-spacing: -.03em; display: block; }
+.tile .label { font-size: .83rem; color: var(--ink-soft); }
+.tile-revenue { background: var(--ink); color: #fff; }
+.tile-revenue .value { color: var(--signal); }
+.tile-revenue .label { color: #9fb0c1; }
+
+.admin-form { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.3rem; margin-bottom: 1.5rem; }
+.admin-form .btn { margin-top: .9rem; }
+
+.filters { display: flex; gap: .4rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.filters a {
+  padding: .35rem .8rem; border-radius: 999px; font-size: .86rem;
+  text-decoration: none; border: 1px solid var(--line); background: var(--surface); color: var(--ink-soft);
+}
+.filters a.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+.actions { display: flex; gap: .35rem; }
+.actions form { display: inline; }
+
+.detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.1rem; }
+.detail-grid dt { font-size: .8rem; color: var(--ink-soft); }
+.detail-grid dd { margin: .15rem 0 0; font-weight: 600; font-size: 1.05rem; }
+
+@media (max-width: 900px) {
+  .console { grid-template-columns: 1fr; }
+  .side { position: static; }
+  .side nav { flex-direction: row; flex-wrap: wrap; }
+}

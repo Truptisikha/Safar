@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block title %}Routes — Safar.com{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">{% endblock %}
+
+{% block content %}
+<div class="wrap console">
+  {% include 'admin/_sidebar.html' %}
+
+  <div>
+    <div class="page-head">
+      <h1>Routes</h1>
+      <p class="muted">A route ties one bus to one city pair, with its timing and fare.</p>
+    </div>
+
+    {% if buses %}
+    <section class="admin-form">
+      <h3>Add a route</h3>
+      <form method="POST" action="{{ url_for('admin.add_route') }}">
+        <div class="field-grid">
+          <div><label for="source">From</label><input type="text" id="source" name="source" required></div>
+          <div><label for="destination">To</label><input type="text" id="destination" name="destination" required></div>
+          <div><label for="distance_km">Distance (km)</label><input type="number" id="distance_km" name="distance_km" step="0.1" min="0"></div>
+          <div><label for="fare">Fare per seat (₹)</label><input type="number" id="fare" name="fare" step="1" min="0" required></div>
+          <div><label for="departure_time">Departs</label><input type="time" id="departure_time" name="departure_time" value="06:00"></div>
+          <div><label for="arrival_time">Arrives</label><input type="time" id="arrival_time" name="arrival_time" value="12:00"></div>
+          <div>
+            <label for="bus_id">Bus</label>
+            <select id="bus_id" name="bus_id" required>
+              {% for b in buses %}<option value="{{ b.id }}">{{ b.bus_no }} — {{ b.name }}</option>{% endfor %}
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-signal" type="submit">Add route</button>
+      </form>
+    </section>
+    {% else %}
+    <div class="panel empty" style="margin-bottom:1.5rem">
+      <h3>Add a bus first</h3>
+      <p class="muted">A route needs a bus to run on.</p>
+      <a class="btn btn-signal" href="{{ url_for('admin.manage_bus') }}">Go to buses</a>
+    </div>
+    {% endif %}
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Published routes</h2>
+        <input type="search" data-search-for="#routeTable" placeholder="Search routes" style="max-width:220px">
+      </div>
+
+      {% if routes %}
+      <div class="table-scroll">
+        <table id="routeTable">
+          <thead><tr><th data-sort="text">From</th><th data-sort="text">To</th><th>Timing</th><th data-sort="number">Distance</th><th data-sort="number">Fare</th><th>Bus</th><th></th></tr></thead>
+          <tbody>
+            {% for r in routes %}
+            <tr>
+              <td><strong>{{ r.source }}</strong></td>
+              <td><strong>{{ r.destination }}</strong></td>
+              <td class="muted">{{ r.departure_time }} — {{ r.arrival_time }}</td>
+              <td>{{ r.distance_km|round|int }} km</td>
+              <td>₹{{ '%.0f'|format(r.fare) }}</td>
+              <td class="muted">{{ r.bus.bus_no }}</td>
+              <td class="right">
+                <div class="actions" style="justify-content:flex-end">
+                  <button class="btn btn-sm btn-ghost"
+                          data-edit="editRoute"
+                          data-action="{{ url_for('admin.update_route', route_id=r.id) }}"
+                          data-source="{{ r.source }}" data-destination="{{ r.destination }}"
+                          data-distance_km="{{ r.distance_km }}" data-fare="{{ r.fare }}"
+                          data-departure_time="{{ r.departure_time }}" data-arrival_time="{{ r.arrival_time }}"
+                          data-bus_id="{{ r.bus_id }}">Edit</button>
+                  <form method="POST" action="{{ url_for('admin.delete_route', route_id=r.id) }}"
+                        data-confirm="Delete {{ r.source }} → {{ r.destination }}?">
+                    <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty"><h3>No routes published</h3><p class="muted">Passengers see nothing until a route exists.</p></div>
+      {% endif %}
+    </section>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="editRoute">
+  <div class="modal">
+    <h3>Edit route</h3>
+    <form method="POST">
+      <div class="field-grid">
+        <div><label>From</label><input type="text" name="source" required></div>
+        <div><label>To</label><input type="text" name="destination" required></div>
+        <div><label>Distance (km)</label><input type="number" name="distance_km" step="0.1" min="0"></div>
+        <div><label>Fare (₹)</label><input type="number" name="fare" step="1" min="0" required></div>
+        <div><label>Departs</label><input type="time" name="departure_time"></div>
+        <div><label>Arrives</label><input type="time" name="arrival_time"></div>
+        <div>
+          <label>Bus</label>
+          <select name="bus_id">
+            {% for b in buses %}<option value="{{ b.id }}">{{ b.bus_no }} — {{ b.name }}</option>{% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="row" style="margin-top:1rem">
+        <button class="btn btn-signal" type="submit">Save changes</button>
+        <button class="btn btn-ghost" type="button" onclick="Safar.closeModal('editRoute')">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/admin.js') }}"></script>{% endblock %}

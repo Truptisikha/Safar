@@ -1,0 +1,19 @@
+<aside class="side">
+  <nav>
+    <span class="side-title">Overview</span>
+    <a href="{{ url_for('admin.dashboard') }}" class="{{ 'active' if request.endpoint == 'admin.dashboard' }}">Dashboard</a>
+
+    <span class="side-title">Fleet</span>
+    <a href="{{ url_for('admin.manage_bus') }}" class="{{ 'active' if request.endpoint == 'admin.manage_bus' }}">Buses</a>
+    <a href="{{ url_for('admin.manage_route') }}" class="{{ 'active' if request.endpoint == 'admin.manage_route' }}">Routes</a>
+
+    <span class="side-title">People</span>
+    <a href="{{ url_for('admin.reservations') }}" class="{{ 'active' if request.endpoint in ['admin.reservations', 'admin.reservation_detail'] }}">Bookings</a>
+    <a href="{{ url_for('admin.users') }}" class="{{ 'active' if request.endpoint == 'admin.users' }}">Passengers</a>
+    <a href="{{ url_for('admin.feedback') }}" class="{{ 'active' if request.endpoint == 'admin.feedback' }}">Feedback</a>
+
+    <span class="side-title">Account</span>
+    <a href="{{ url_for('admin.profile') }}" class="{{ 'active' if request.endpoint == 'admin.profile' }}">My details</a>
+    <a href="{{ url_for('auth.logout') }}">Sign out</a>
+  </nav>
+</aside>
